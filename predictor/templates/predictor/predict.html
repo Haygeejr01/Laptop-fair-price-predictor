@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Price | ValueSpec</title>
+    <link rel="stylesheet" href="{% static 'predictor/style.css' %}">
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'home' %}" class="logo">Value<span>Spec</span></a>
+        <div class="hamburger" id="hamburger">☰</div>
+        <div class="nav-links" id="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'predict_page' %}">Price Check</a>
+        </div>
+    </nav>
+
+    <section class="app-section">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2>Laptop Specifications</h2>
+                <p>Input the details below to generate a real-time valuation.</p>
+            </div>
+            
+            <form method="POST" action="{% url 'predict_page' %}">
+                {% csrf_token %}
+                
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="brand">Manufacturer</label>
+                        <select name="brand" id="brand" required>
+                            <option value="" disabled selected>Select Brand</option>
+                            <option value="Hp">HP</option>
+                            <option value="DELL">Dell</option>
+                            <option value="Lenovo">Lenovo</option>
+                            <option value="Asus">Asus</option>
+                            <option value="Apple">Apple</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="processor">Processor Unit</label>
+                        <select name="processor" id="processor" required>
+                            <option value="" disabled selected>Select CPU</option>
+                            <option value="Core i3">Intel Core i3</option>
+                            <option value="Core i5">Intel Core i5</option>
+                            <option value="Core i7">Intel Core i7</option>
+                            <option value="Celeron">Intel Celeron</option>
+                            <option value="Pentium">Intel Pentium</option>
+                            <option value="Ryzen 5">AMD Ryzen 5</option>
+                            <option value="Ryzen 7">AMD Ryzen 7</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="ram">Memory (RAM)</label>
+                        <input type="number" name="ram" id="ram" min="2" max="64" placeholder="e.g. 8" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="storage">Storage Space</label>
+                        <input type="number" name="storage" id="storage" min="128" max="2048" placeholder="e.g. 512" required>
+                    </div>
+                </div>
+
+                <div class="input-group full-width" style="margin-top: 1rem;">
+                    <button type="submit" class="btn-primary" style="width: 100%;">Calculate Market Value</button>
+                </div>
+            </form>
+
+            {% if predicted_price %}
+            <div class="result-card">
+                <div class="result-label">Estimated Fair Market Value</div>
+                <div class="result-value">₦{{ predicted_price }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navLinks = document.getElementById('nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+        });
+    </script>
+</body>
+</html>
